@@ -4,12 +4,13 @@ import Form from "react-bootstrap/Form";
 import Dropdown from "react-bootstrap/Dropdown";
 import { useNavigate } from "react-router-dom";
 import Table from "../../components/table/Table";
+import "./home.css"
 
 const Home = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const handleNavigatetoRegister = () => {
-    navigate('/register')
-  }
+    navigate("/register");
+  };
   return (
     <>
       <div className="container">
@@ -29,7 +30,12 @@ const Home = () => {
             <div className="add-btn">
               <Button variant="primary">
                 <i class="fa-solid fa-plus"></i>&nbsp;
-                <span onClick={handleNavigatetoRegister} style={{ fontSize: "18px" }}>Add User</span>
+                <span
+                  onClick={handleNavigatetoRegister}
+                  style={{ fontSize: "18px" }}
+                >
+                  Add User
+                </span>
               </Button>
             </div>
           </div>
@@ -48,20 +54,41 @@ const Home = () => {
                   id="All"
                   defaultChecked
                 />
-                <Form.Check inline label="Male" name="gender" id="Male" type="radio" />
-                <Form.Check inline label="Female" name="gender" id="Female" type="radio" />
+                <Form.Check
+                  inline
+                  label="Male"
+                  name="gender"
+                  id="Male"
+                  type="radio"
+                />
+                <Form.Check
+                  inline
+                  label="Female"
+                  name="gender"
+                  id="Female"
+                  type="radio"
+                />
               </div>
             </div>
             <div className="sort-value">
               <h4>Sort By Value</h4>
               <div className="sort-new-old">
                 <Dropdown className="text-center">
-                <Dropdown.Toggle className="dropdown-btn" id="dropdown-basic-button">
-                
-                  </Dropdown.Toggle>
-                  <Dropdown.Menu>
-                    <Dropdown.Item >New</Dropdown.Item>
-                    <Dropdown.Item >Old</Dropdown.Item>
+                  <Button
+                    style={{
+                      fontSize: "20px",
+                      color: "blue",
+                      backgroundColor: "white",
+                      border: "none",
+                    }}
+                    role="button"
+                    type="button"
+                    className="dropdown-btn"
+                    data-toggle="dropdown"
+                  ><i class="fa-solid fa-sort"></i></Button>
+                  <Dropdown.Menu className="dropdown-menu">
+                    <Dropdown.Item>New</Dropdown.Item>
+                    <Dropdown.Item>Old</Dropdown.Item>
                   </Dropdown.Menu>
                 </Dropdown>
               </div>
@@ -77,8 +104,20 @@ const Home = () => {
                   id="All"
                   defaultChecked
                 />
-                <Form.Check inline label="Active" name="status" id="Active" type="radio" />
-                <Form.Check inline label="InActive" name="status" id="InActive" type="radio" />
+                <Form.Check
+                  inline
+                  label="Active"
+                  name="status"
+                  id="Active"
+                  type="radio"
+                />
+                <Form.Check
+                  inline
+                  label="InActive"
+                  name="status"
+                  id="InActive"
+                  type="radio"
+                />
               </div>
             </div>
           </div>

@@ -1,0 +1,9 @@
+Table tbody tr td{
+    vertical-align: middle;
+    font-weight: 500;
+}
+Table thead tr td{
+    font-size: 18px;
+    font-weight: 500;
+}
+
