@@ -126,7 +126,7 @@ const handleSubmit = (e) => {
                   />
                 </Form.Group>
                 <Form.Group
-                  className="mb-3 col-md-6"
+                  className="mb-3 col-lg-6"
                   controlId="formBasicEmail"
                 >
                   <Form.Label>Email</Form.Label>
