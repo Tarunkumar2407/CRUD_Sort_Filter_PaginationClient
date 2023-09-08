@@ -1,16 +1,23 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import Dropdown from "react-bootstrap/Dropdown";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import Table from "../../components/table/Table";
-import "./home.css"
+import Spinner from "../../components/spinner/Spinner";
 
 const Home = () => {
+
+  const [showSpin, setShowSpin] = useState(true)
   const navigate = useNavigate();
   const handleNavigatetoRegister = () => {
     navigate("/register");
   };
+  useEffect(() => {
+    setTimeout(()=> {
+      setShowSpin(false)
+    },500)
+  },[])
   return (
     <>
       <div className="container">
@@ -74,19 +81,21 @@ const Home = () => {
               <h4>Sort By Value</h4>
               <div className="sort-new-old">
                 <Dropdown className="text-center">
-                  <Button
+                  <Dropdown.Toggle
                     style={{
-                      fontSize: "20px",
+                      paddingTop: "0px",
+                      width: "50px",
+                      fontSize: "30px",
                       color: "blue",
                       backgroundColor: "white",
                       border: "none",
                     }}
                     role="button"
                     type="button"
-                    className="dropdown-btn"
+                    className="btn"
                     data-toggle="dropdown"
-                  ><i class="fa-solid fa-sort"></i></Button>
-                  <Dropdown.Menu className="dropdown-menu">
+                  ></Dropdown.Toggle>
+                  <Dropdown.Menu>
                     <Dropdown.Item>New</Dropdown.Item>
                     <Dropdown.Item>Old</Dropdown.Item>
                   </Dropdown.Menu>
@@ -95,7 +104,7 @@ const Home = () => {
             </div>
             <div className="filter-gender">
               <h4>Filter By Gender</h4>
-              <div className="checks-gender">
+              <div className="checks-gender" >
                 <Form.Check
                   inline
                   label="All"
@@ -121,7 +130,9 @@ const Home = () => {
               </div>
             </div>
           </div>
-          <Table />
+          {
+           showSpin ? <Spinner /> : <Table />
+          }
         </div>
       </div>
     </>

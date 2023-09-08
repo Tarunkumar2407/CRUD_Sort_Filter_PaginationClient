@@ -1,7 +1,7 @@
 import React from "react";
 import Card from "react-bootstrap/Card";
 import Table from "react-bootstrap/Table";
-import "./table.css"
+import "./table.css";
 
 const Table1 = () => {
   return (
@@ -29,28 +29,40 @@ const Table1 = () => {
                 <td>Male</td>
                 <td>8279098093</td>
                 <td>
-                  <select style={{fontWeight: "500", border:"1px solid black",fontSize: "16px"}} 
+                  <select
+                    style={{
+                      fontWeight: "500",
+                      border: "1px solid black",
+                      fontSize: "16px",
+                      cursor:"pointer"
+                    }}
                     class="form-select form-select-sm"
                     aria-label="Small select example"
                   >
                     <option selected value="Active">
                       Active
                     </option>
-                    <option  value="InActive">InActive</option>
+                    <option value="InActive">InActive</option>
                   </select>
                 </td>
                 <td className="text-center">
-                    <img
-                      style={{
-                        width: "40px",
-                        height: "40px",
-                        borderRadius: "50%",
-                      }}
-                      src="/man.png"
-                      alt="profile-pic"
-                    ></img>
+                  <img
+                    style={{
+                      width: "40px",
+                      height: "40px",
+                      borderRadius: "50%",
+                    }}
+                    src="/man.png"
+                    alt="profile-pic"
+                  ></img>
                 </td>
-                <td></td>
+                <td>
+                  <div className="actions">
+                    <div className="view" style={{cursor:"pointer"}}><i class="fa-solid fa-eye" style={{color:"green"}}></i>&nbsp;View</div>
+                    <div className="edit" style={{cursor:"pointer"}}><i class="fa-solid fa-pen-to-square" style={{color: "blue"}}></i>&nbsp;Edit</div>
+                    <div className="delete" style={{cursor:"pointer"}}><i class="fa-solid fa-trash" style={{color: "red"}}></i>&nbsp;Delete</div>
+                  </div>
+                </td>
               </tr>
             </tbody>
           </Table>

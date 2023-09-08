@@ -6,4 +6,8 @@ Table thead tr td{
     font-size: 18px;
     font-weight: 500;
 }
+.actions{
+    display: flex;
+    justify-content: space-between;
+}
 
