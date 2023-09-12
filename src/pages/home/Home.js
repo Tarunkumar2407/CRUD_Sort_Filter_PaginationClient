@@ -103,7 +103,7 @@ const Home = () => {
               </div>
             </div>
             <div className="filter-gender">
-              <h4>Filter By Gender</h4>
+              <h4>Filter By Status</h4>
               <div className="checks-gender" >
                 <Form.Check
                   inline

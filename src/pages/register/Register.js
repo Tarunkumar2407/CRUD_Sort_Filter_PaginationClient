@@ -5,10 +5,14 @@ import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 import Select from "react-select";
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { requestFunction } from "../../services/APIs";
+import { useNavigate } from "react-router-dom";
 
 const Register = () => {
+
+  const navigate = useNavigate()
 
   const [inputValue, setInputValue] = useState({
     fname: "",
@@ -16,75 +20,110 @@ const Register = () => {
     email: "",
     mobile: "",
     gender: "",
-    location: ""
-  })
-  const [status, setStatus] = useState("Active")
-  const [image, setImage] = useState("")
-  const [preview, setPreview] = useState("")
+    location: "",
+  });
+  const [status, setStatus] = useState("Active");
+  const [image, setImage] = useState("");
+  const [preview, setPreview] = useState("");
 
   //to hansle the status
   const handleInputVal = (e) => {
-     e.preventDefault()
-     let {name, value} = e.target
-     setInputValue({
+    e.preventDefault();
+    let { name, value } = e.target;
+    setInputValue({
       ...inputValue,
-      [name]: value
-     })
-  }
-  // console.log(inputValue)
+      [name]: value,
+    });
+  };
+  console.log(inputValue);
 
+  //to handle the status
+  const handleStatus = (e) => {
+    setStatus(e.value);
+  };
+  console.log(status)
 
-//to handle the status
-const handleStatus = (e) => {
-  setStatus(e.value)
-}
-// console.log(status)
+  //to set the image
+  const handleImage = (e) => {
+    setImage(e.target.files[0]);
+  };
+  console.log(image);
 
-//to set the image 
-const handleImage = (e) => {
-  setImage(e.target.files[0])
-}
-console.log(image)
+  //to show the image on profile-Image
+  useEffect(() => {
+    if (image) {
+      setPreview(URL.createObjectURL(image));
+    }
+  }, [image]);
 
-//to show the image on profile-Image 
-useEffect(()=> {
-  if(image){
-    setPreview(URL.createObjectURL(image))
-  }
-},[image])
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const { fname, lname, email, mobile, status, gender, location } =
+      inputValue;
+    if (fname === "") {
+      toast.error("First Name is required");
+    } else if (lname === "") {
+      toast.error("Last Name is required");
+    } else if (email === "") {
+      toast.error("Email is required");
+    } else if (!email.includes("@")) {
+      toast.error("Enter valid email");
+    } else if (mobile === "") {
+      toast.error("Mobile no. is required");
+    } else if (mobile.length < 10) {
+      toast.error("Enter valid mobile no.");
+    } else if (status === "") {
+      toast.error("Status is required");
+    } else if (gender === "") {
+      toast.error("Gender is required");
+    } else if (image === "") {
+      toast.error("Profile pic is required");
+    } else if (location === "") {
+      toast.error("Location is requied");
+    } else {
+      
+      const data = new FormData();
+      data.append("fname", fname);
+      data.append("lname", lname);
+      data.append("email", email);
+      data.append("mobile", mobile);
+      data.append("gender", gender);
+      data.append("status", status);
+      data.append("user_profile", image);
+      data.append("location", location);
 
-const handleSubmit = (e) => {
-  e.preventDefault()
-  const {fname, lname, email, mobile, status, gender, location} = inputValue
-  if(fname === ""){
-    toast.error("First Name is required")
-  }else if(lname === ""){
-    toast.error("Last Name is required")
-  }else if(email === ""){
-    toast.error("Email is required")
-  }else if(!email.includes("@")){
-    toast.error("Enter valid email")
-  }else if(mobile === ""){
-    toast.error("Mobile no. is required")
-  }else if(mobile.length < 10){
-    toast.error("Enter valid mobile no.")
-  }else if(status === ""){
-    toast.error("Status is required")
-  }else if(gender === ""){
-    toast.error("Gender is required")
-  }else if(image === ""){
-    toast.error("Profile pic is required")
-  }else if(location === ""){
-    toast.error("Location is requied")
-  }else{
-    toast.success("Successfully registered")
-  }
-}
+      const config = {
+        "Content-Type": "multipart/form-data",
+      };
 
-  //select your status options
+      const response = await requestFunction(data, config);
+      // console.log(response);
+      if(response.status === 200) {
+        toast.success("Registeration Successfull",{
+          autoClose: 3000
+        });
+        setInputValue({
+          ...inputValue,
+          fname: "",
+          lname: "",
+          email: "",
+          mobile: "",
+          gender: "",
+          location: "",
+        })
+      }
+      setStatus("")
+      setImage("")
+      setTimeout(() => {
+        navigate('/')
+      },4000)
+    }
+  };
+
+  //select for status options
   const options = [
     { value: "Active", label: "Active" },
-    { value: "In-Active", label: "In-Active" },
+    { value: "InActive", label: "InActive" },
   ];
   return (
     <>
@@ -153,36 +192,42 @@ const handleSubmit = (e) => {
                   />
                 </Form.Group>
 
-                <Form.Group className="mb-3 col-lg-6" controlId="formBasicCheckbox">
+                <Form.Group
+                  className="mb-3 col-lg-6"
+                  controlId="formBasicCheckbox"
+                >
                   <Form.Label>Select Your Gender</Form.Label>
-                  <Form.Check 
-                  type="radio" 
-                  label="Male" 
-                  name="gender"
-                  value={"Male"}
-                  onChange={handleInputVal}
+                  <Form.Check
+                    type="radio"
+                    label="Male"
+                    name="gender"
+                    value={"Male"}
+                    onChange={handleInputVal}
                   />
-                  <Form.Check 
-                  type="radio" 
-                  label="Female" 
-                  name="gender" 
-                  value={"Female"}
-                  onChange={handleInputVal}
+                  <Form.Check
+                    type="radio"
+                    label="Female"
+                    name="gender"
+                    value={"Female"}
+                    onChange={handleInputVal}
                   />
                 </Form.Group>
-                <Form.Group className="mb-3 col-lg-6" controlId="formBasicCheckbox">
+                <Form.Group
+                  className="mb-3 col-lg-6"
+                  controlId="formBasicCheckbox"
+                >
                   <Form.Label>Select Your Status</Form.Label>
-                  <Select options={options} onChange={handleStatus}/>
+                  <Select options={options} onChange={handleStatus} />
                 </Form.Group>
                 <Form.Group
                   className="mb-3 col-lg-6"
                   controlId="formBasicEmail"
                 >
                   <Form.Label>Enter Your Profile</Form.Label>
-                  <Form.Control 
-                  type="file" 
-                  name="profile" 
-                  onChange={handleImage}
+                  <Form.Control
+                    type="file"
+                    name="user_profile"
+                    onChange={handleImage}
                   />
                 </Form.Group>
                 <Form.Group
@@ -198,7 +243,12 @@ const handleSubmit = (e) => {
                     onChange={handleInputVal}
                   />
                 </Form.Group>
-                <Button variant="primary" type="submit" className="w-100" onClick={handleSubmit}>
+                <Button
+                  variant="primary"
+                  type="submit"
+                  className="w-100"
+                  onClick={handleSubmit}
+                >
                   Submit
                 </Button>
               </Row>
