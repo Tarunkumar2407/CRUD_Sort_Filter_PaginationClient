@@ -11,8 +11,8 @@ const Spinner1 = () => {
           flexDirection: "column"
         }}
       >
-        <div class="spinner-border text-dark" role="status" style={{width: "40px", height: "40px"}}>
-          <span class="visually-hidden">Loading...</span>
+        <div className="spinner-border text-dark" role="status" style={{width: "40px", height: "40px"}}>
+          <span className="visually-hidden">Loading...</span>
         </div>
         <div style={{fontSize: "24px"}}>Loading...</div>
       </div>

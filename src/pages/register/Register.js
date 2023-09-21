@@ -58,7 +58,7 @@ const Register = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const { fname, lname, email, mobile, status, gender, location } =
+    const { fname, lname, email, mobile, gender, location } =
       inputValue;
     if (fname === "") {
       toast.error("First Name is required");
@@ -81,7 +81,7 @@ const Register = () => {
     } else if (location === "") {
       toast.error("Location is requied");
     } else {
-      
+      console.log("status1 is",status)
       const data = new FormData();
       data.append("fname", fname);
       data.append("lname", lname);
@@ -97,7 +97,7 @@ const Register = () => {
       };
 
       const response = await requestFunction(data, config);
-      // console.log(response);
+      console.log(response);
       if(response.status === 200) {
         toast.success("Registeration Successfull",{
           autoClose: 3000
@@ -217,6 +217,7 @@ const Register = () => {
                   controlId="formBasicCheckbox"
                 >
                   <Form.Label>Select Your Status</Form.Label>
+                  {console.log("status is",status)}
                   <Select options={options} onChange={handleStatus} />
                 </Form.Group>
                 <Form.Group

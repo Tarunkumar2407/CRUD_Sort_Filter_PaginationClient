@@ -7,8 +7,12 @@ import Row from "react-bootstrap/Row";
 import Select from "react-select";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useNavigate, useParams } from "react-router-dom";
+import { editUserFunction, getSingleUserFunction } from "../../services/APIs";
+import { BASE_URL } from "../../services/helper"
 
 const Edit = () => {
+  const navigate = useNavigate()
   const [inputValue, setInputValue] = useState({
     fname: "",
     lname: "",
@@ -18,6 +22,7 @@ const Edit = () => {
     location: ""
   })
   const [status, setStatus] = useState("Active")
+  const [imgData, setImgData] = useState("")
   const [image, setImage] = useState("")
   const [preview, setPreview] = useState("")
 
@@ -45,14 +50,34 @@ const handleImage = (e) => {
 }
 console.log(image)
 
+
+const [userProfile, setUserProfile] = useState({})
+const {id} = useParams()
+console.log(id)
+
+const userProfileGet = async () => {
+    const response = await getSingleUserFunction(id)
+    console.log(response)
+    if(response.status === 200){
+       setUserProfile(response.data)
+       setInputValue(response.data)
+       setStatus(response.data.status)
+       setImgData(response.data.profile)
+    }else{
+      console.log("Error in getting user by Id")
+    }
+}
+console.log(inputValue.gender)
+console.log(status)
 //to show the image on profile-Image 
 useEffect(()=> {
+  setImgData("")
   if(image){
     setPreview(URL.createObjectURL(image))
   }
 },[image])
 
-const handleSubmit = (e) => {
+const handleSubmit = async (e) => {
   e.preventDefault()
   const {fname, lname, email, mobile, status, gender, location} = inputValue
   if(fname === ""){
@@ -71,15 +96,42 @@ const handleSubmit = (e) => {
     toast.error("Status is required")
   }else if(gender === ""){
     toast.error("Gender is required")
-  }else if(image === ""){
+  }else if(imgData === ""){
     toast.error("Profile pic is required")
   }else if(location === ""){
     toast.error("Location is requied")
   }else{
-    toast.success("Successfully registered")
+    console.log("status1 is",status)
+      const data = new FormData();
+      data.append("fname", fname);
+      data.append("lname", lname);
+      data.append("email", email);
+      data.append("mobile", mobile);
+      data.append("gender", gender);
+      data.append("status", status);
+      data.append("user_profile", image || imgData);
+      data.append("location", location);
+
+      const config = {
+        "Content-Type": "multipart/form-data",
+      };
+      
+      const response = await editUserFunction(id, data, config)
+      console.log(response)
+      if(response.status === 200) {
+        toast.success("Updated Successfully",{
+          autoClose: 3000
+        });
+        setTimeout(() => {
+          navigate('/')
+        },4000)
+      }
   }
 }
 
+useEffect(() => {
+  userProfileGet()
+},[id])
   //select your status options
   const options = [
     { value: "Active", label: "Active" },
@@ -94,7 +146,7 @@ const handleSubmit = (e) => {
         <Card className="shadow">
           <Card.Body>
             <div className="text-center profile-img">
-              <img src={preview ? preview : "/man.png"} alt="profile-img"></img>
+              <img src={image ? preview : `${BASE_URL}/uploads/${imgData}`} alt="profile-img"></img>
             </div>
 
             <Form className="mt-3">
@@ -159,6 +211,7 @@ const handleSubmit = (e) => {
                   label="Male" 
                   name="gender"
                   value={"Male"}
+                  checked={inputValue.gender === "Male" ? true : false}
                   onChange={handleInputVal}
                   />
                   <Form.Check 
@@ -166,6 +219,7 @@ const handleSubmit = (e) => {
                   label="Female" 
                   name="gender" 
                   value={"Female"}
+                  checked={inputValue.gender === "Female" ? true : false}
                   onChange={handleInputVal}
                   />
                 </Form.Group>

@@ -5,19 +5,62 @@ import Dropdown from "react-bootstrap/Dropdown";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import Table from "../../components/table/Table";
 import Spinner from "../../components/spinner/Spinner";
+import { deleteUserFunction, exportToCsvFunction, getUserFunction } from "../../services/APIs";
+import { ToastContainer,toast } from "react-toastify";
 
 const Home = () => {
-
+  const [userData, setUserData] = useState([])
   const [showSpin, setShowSpin] = useState(true)
+  const [search, setSearch] = useState("")
+  const [gender, setGender] = useState("All")
+  const [status, setStatus] = useState("All")
+  const [sort, setSort] = useState("new")
+  
   const navigate = useNavigate();
   const handleNavigatetoRegister = () => {
     navigate("/register");
   };
+  
+  let data = []
+  const getUserData = async () => {
+      const response = await getUserFunction(search,gender,status,sort)
+      // console.log(response.data)
+      if(response.status === 200){
+        setUserData(response.data)
+        // console.log(userData)
+      }else{
+        console.log({"status": "failed", "messages": "Error in getting user data"})
+      }
+  }
+  // console.log(userData)
+
+  const deleteUser = async(id) => {
+     const response = await deleteUserFunction(id)
+     if(response.status === 200){
+      getUserData()
+      toast.success("User Deleted Successfully")
+     }else{
+      toast.error("Error in deleting user")
+     }
+  }
+
+  const handleExportUser = async ()=> {
+    const response = await exportToCsvFunction();
+    console.log(response)
+    if(response.status === 200) {
+      window.open(response.data.downloadUrl, "blank")
+    }else{
+      toast.error("Error in Exporting user to csv")
+    }
+  }
+
   useEffect(() => {
+    getUserData();
     setTimeout(()=> {
       setShowSpin(false)
     },500)
-  },[])
+  },[search,gender,status,sort])
+
   return (
     <>
       <div className="container">
@@ -30,13 +73,14 @@ const Home = () => {
                   placeholder="Search"
                   className="me-2"
                   aria-label="Search"
+                  onChange={(e)=> setSearch(e.target.value)}
                 />
                 <Button variant="success">Search</Button>
               </Form>
             </div>
             <div className="add-btn">
               <Button variant="primary">
-                <i class="fa-solid fa-plus"></i>&nbsp;
+                <i className="fa-solid fa-plus"></i>&nbsp;
                 <span
                   onClick={handleNavigatetoRegister}
                   style={{ fontSize: "18px" }}
@@ -47,7 +91,7 @@ const Home = () => {
             </div>
           </div>
           <div className="csv-gender-value-status mt-4 d-flex justify-content-between flex-wrap">
-            <div className="csv-btn">
+            <div className="csv-btn" onClick={handleExportUser}>
               <Button variant="success">Export To Csv</Button>
             </div>
             <div className="filter-gender">
@@ -59,21 +103,27 @@ const Home = () => {
                   name="gender"
                   type="radio"
                   id="All"
+                  value={"All"}
                   defaultChecked
+                  onChange={(e)=> setGender(e.target.value)}
                 />
                 <Form.Check
                   inline
                   label="Male"
                   name="gender"
                   id="Male"
+                  value={"Male"}
                   type="radio"
+                  onChange={(e)=> setGender(e.target.value)}
                 />
                 <Form.Check
                   inline
                   label="Female"
                   name="gender"
                   id="Female"
+                  value={"Female"}
                   type="radio"
+                  onChange={(e)=> setGender(e.target.value)}
                 />
               </div>
             </div>
@@ -96,8 +146,8 @@ const Home = () => {
                     data-toggle="dropdown"
                   ></Dropdown.Toggle>
                   <Dropdown.Menu>
-                    <Dropdown.Item>New</Dropdown.Item>
-                    <Dropdown.Item>Old</Dropdown.Item>
+                    <Dropdown.Item onClick={()=> setSort("new")}>New</Dropdown.Item>
+                    <Dropdown.Item onClick={()=> setSort("old")}>Old</Dropdown.Item>
                   </Dropdown.Menu>
                 </Dropdown>
               </div>
@@ -111,6 +161,8 @@ const Home = () => {
                   name="status"
                   type="radio"
                   id="All"
+                  value={"All"}
+                  onChange={(e)=> setStatus(e.target.value)}
                   defaultChecked
                 />
                 <Form.Check
@@ -119,22 +171,32 @@ const Home = () => {
                   name="status"
                   id="Active"
                   type="radio"
+                  value={"Active"}
+                  onChange={(e)=> setStatus(e.target.value)}
                 />
                 <Form.Check
                   inline
                   label="InActive"
                   name="status"
-                  id="InActive"
+                  id="InActive" 
+                  value={"InActive"}
+                  onChange={(e)=> setStatus(e.target.value)}
                   type="radio"
                 />
               </div>
             </div>
           </div>
           {
-           showSpin ? <Spinner /> : <Table />
+           showSpin ? <Spinner /> : 
+           <Table 
+           userData={ userData } 
+           deleteUser ={ deleteUser }
+           getUserData = { getUserData }
+           />
           }
         </div>
       </div>
+      <ToastContainer />
     </>
   );
 };
