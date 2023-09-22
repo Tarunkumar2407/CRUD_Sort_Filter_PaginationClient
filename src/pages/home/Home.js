@@ -2,10 +2,10 @@ import React, { useEffect, useState } from "react";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import Dropdown from "react-bootstrap/Dropdown";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Table from "../../components/table/Table";
 import Spinner from "../../components/spinner/Spinner";
-import { deleteUserFunction, exportToCsvFunction, getUserFunction } from "../../services/APIs";
+import { deleteUserFunction, getUserFunction } from "../../services/APIs";
 import { ToastContainer,toast } from "react-toastify";
 
 const Home = () => {
@@ -32,7 +32,7 @@ const Home = () => {
         console.log({"status": "failed", "messages": "Error in getting user data"})
       }
   }
-  // console.log(userData)
+  console.log(userData)
 
   const deleteUser = async(id) => {
      const response = await deleteUserFunction(id)
@@ -42,16 +42,6 @@ const Home = () => {
      }else{
       toast.error("Error in deleting user")
      }
-  }
-
-  const handleExportUser = async ()=> {
-    const response = await exportToCsvFunction();
-    console.log(response)
-    if(response.status === 200) {
-      window.open(response.data.downloadUrl, "blank")
-    }else{
-      toast.error("Error in Exporting user to csv")
-    }
   }
 
   useEffect(() => {
@@ -91,9 +81,6 @@ const Home = () => {
             </div>
           </div>
           <div className="csv-gender-value-status mt-4 d-flex justify-content-between flex-wrap">
-            <div className="csv-btn" onClick={handleExportUser}>
-              <Button variant="success">Export To Csv</Button>
-            </div>
             <div className="filter-gender">
               <h4>Filter By Gender</h4>
               <div className="checks-gender">

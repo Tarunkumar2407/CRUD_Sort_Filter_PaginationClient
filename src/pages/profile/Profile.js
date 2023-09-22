@@ -24,6 +24,7 @@ const Profile = () => {
   useEffect(()=> {
     userProfileGet();
   },[id])
+  
   return (
     <>
     <div className='container'>

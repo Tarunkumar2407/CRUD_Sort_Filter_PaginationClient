@@ -20,11 +20,3 @@ export const editUserFunction = async (id,data,header) => {
 export const deleteUserFunction = async (id) => {
     return await commonRequest("DELETE",`${BASE_URL}/user/delete/${id}`,{});
 }
-
-export const statusUpdateFunction = async (id,status) => {
-    return await commonRequest("PUT",`${BASE_URL}/user/status/${id}`,{status});
-}
-
-export const exportToCsvFunction = async (id,status) => {
-    return await commonRequest("GET",`${BASE_URL}/user/usersexport`,"");
-}

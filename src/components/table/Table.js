@@ -1,28 +1,12 @@
 import React from "react";
 import Card from "react-bootstrap/Card";
 import Table from "react-bootstrap/Table";
-import Dropdown from "react-bootstrap/Dropdown";
 import Badge from "react-bootstrap/Badge"
 import { BASE_URL } from "../../services/helper.js";
 import { NavLink } from "react-router-dom"
 import "./table.css";
-import { statusUpdateFunction } from "../../services/APIs.js";
-import { ToastContainer, toast } from "react-toastify";
 
-
-const Table1 = ({ userData, deleteUser, getUserData}) => {
-const handleStatusUpdate = async (id, status) => {
-  const response = await statusUpdateFunction(id, status)
-  console.log(response)
-  // console.log(id, status)
-  if(response.status === 200) {
-    getUserData()
-    toast.success("Status Updated")
-  }else{
-    toast.error("Error in updating status")
-  }
-  
-}
+const Table1 = ({ userData, deleteUser}) => {
 
   return (
     <>
@@ -55,25 +39,7 @@ const handleStatusUpdate = async (id, status) => {
                         <td>{item.gender}</td>
                         <td>{item.mobile}</td>
                         <td>
-                          <Dropdown>
-                            <Dropdown.Toggle
-                              className="dropdown-btn"
-                              id="dropdown-basic"
-                            >
-                              <Badge style={{fontSize: "16px", margin: "0px"}}>{item.status}</Badge>
-                            </Dropdown.Toggle>
-
-                            <Dropdown.Menu>
-                              <Dropdown.Item href="#/action-1" 
-                              onClick={()=> handleStatusUpdate(item._id, "Active")}>
-                                Active
-                              </Dropdown.Item>
-                              <Dropdown.Item href="#/action-2"
-                              onClick={()=> handleStatusUpdate(item._id, "InActive")}>
-                                InActive
-                              </Dropdown.Item>
-                            </Dropdown.Menu>
-                          </Dropdown>
+                        <Badge style={{fontSize: "18px"}}>{item.status}</Badge>
                         </td>
                         <td className="text-center">
                           <img
@@ -89,19 +55,21 @@ const handleStatusUpdate = async (id, status) => {
                         <td>
                           <div className="actions">
                             <div className="view" style={{ cursor: "pointer" }}>
+                            <NavLink to={`/userprofile/${item._id}`} style={{textDecoration: "none", color: "black"}}>
                               <i
                                 className="fa-solid fa-eye"
                                 style={{ color: "green" }}
                               ></i>
-                              <NavLink to={`/userprofile/${item._id}`} style={{textDecoration: "none", color: "black"}}>
+                             
                               &nbsp;View</NavLink>
                             </div>
                             <div className="edit" style={{ cursor: "pointer" }}>
+                            <NavLink to={`/edit/${item._id}`} style={{textDecoration: "none", color: "black"}}>
                               <i
                                 className="fa-solid fa-pen-to-square"
                                 style={{ color: "blue" }}
                               ></i>
-                              <NavLink to={`/edit/${item._id}`} style={{textDecoration: "none", color: "black"}}>
+                              
                               &nbsp;Edit</NavLink>
                             </div>
                             <div
@@ -128,7 +96,6 @@ const handleStatusUpdate = async (id, status) => {
           </Table>
         </Card>
       </div>
-      <ToastContainer />
     </>
   );
 };
